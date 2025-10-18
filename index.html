@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>速推流 - 专业直播推流软件</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+        
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.5em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px auto;
+            max-width: 900px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        
+        .download-section {
+            text-align: center;
+            margin: 50px 0;
+            padding: 40px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            color: white;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            background: white;
+            color: #764ba2;
+            padding: 15px 50px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 20px 10px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
+        .version-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            margin-top: 40px;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        .footer a:hover {
+            opacity: 1;
+        }
+        
+        .nav {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        
+        .nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+        
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: opacity 0.3s;
+        }
+        
+        .nav a:hover {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="about.html">关于我们</a></li>
+                <li><a href="contact.html">联系方式</a></li>
+                <li><a href="terms.html">使用条款</a></li>
+                <li><a href="privacy.html">隐私政策</a></li>
+            </ul>
+        </nav>
+        
+        <header>
+            <h1>⚡ 速推流</h1>
+            <p>专业的抖音直播推流软件 - 零重连技术</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="download-section">
+                <h2>🚀 立即下载</h2>
+                <p>最新版本：v2.0 | 支持Windows 10/11</p>
+                <a href="#" class="download-btn" onclick="alert('请联系客服获取下载链接'); return false;">💾 下载速推流</a>
+                <a href="#" class="download-btn" onclick="alert('请联系客服获取授权'); return false;">🔑 获取授权</a>
+            </div>
+            
+            <h2 style="text-align: center; margin: 40px 0 30px 0;">✨ 核心功能</h2>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <h3>🛡️ 零重连技术</h3>
+                    <p>独家零重连技术，100%稳定推流，告别断流烦恼</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>⚡ 一键配置</h3>
+                    <p>自动检测软件路径，自动配置推流参数，一键启动直播</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>🎯 智能监控</h3>
+                    <p>实时监控推流状态，自动修复异常，确保直播稳定</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>🔧 OBS优化</h3>
+                    <p>深度优化OBS配置，自动设置最佳参数，画质更清晰</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>📊 状态监控</h3>
+                    <p>实时显示推流状态、网络延迟、码率等关键信息</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>🌟 持续更新</h3>
+                    <p>定期更新功能，持续优化性能，终身免费升级</p>
+                </div>
+            </div>
+            
+            <div class="version-info">
+                <h3>📌 版本信息</h3>
+                <ul style="margin-left: 20px; margin-top: 15px;">
+                    <li><strong>当前版本</strong>：v2.0</li>
+                    <li><strong>更新日期</strong>：2024年1月</li>
+                    <li><strong>系统要求</strong>：Windows 10/11 64位</li>
+                    <li><strong>文件大小</strong>：约 50MB</li>
+                    <li><strong>授权方式</strong>：按年订阅 / 终身授权</li>
+                </ul>
+            </div>
+            
+            <div style="margin: 40px 0; padding: 30px; background: #e3f2fd; border-radius: 10px;">
+                <h3 style="color: #1976d2; margin-bottom: 15px;">💡 使用说明</h3>
+                <ol style="margin-left: 20px; line-height: 2;">
+                    <li>下载并安装速推流软件</li>
+                    <li>以管理员身份运行软件</li>
+                    <li>软件自动检测OBS和直播伴侣</li>
+                    <li>在直播伴侣中开播</li>
+                    <li>软件自动配置OBS推流</li>
+                    <li>享受零重连的直播体验</li>
+                </ol>
+            </div>
+            
+            <div style="margin: 40px 0; padding: 30px; background: #fff3e0; border-radius: 10px;">
+                <h3 style="color: #f57c00; margin-bottom: 15px;">⚠️ 重要提示</h3>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>本软件仅供个人学习和合法直播使用</li>
+                    <li>请遵守抖音平台的相关规定</li>
+                    <li>不得用于违法违规内容的直播</li>
+                    <li>使用前请仔细阅读用户协议</li>
+                </ul>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <p>&copy; 2024 速推流 zhts.ink | 专业直播推流软件</p>
+            <div style="margin-top: 15px;">
+                <a href="about.html">关于我们</a>
+                <a href="contact.html">联系方式</a>
+                <a href="terms.html">使用条款</a>
+                <a href="privacy.html">隐私政策</a>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
+
