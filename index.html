@@ -2,8 +2,11 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>速推流 - 专业直播推流软件</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="速推流 - 专业的抖音直播推流软件，零重连技术，让直播更稳定">
+    <meta name="keywords" content="速推流,抖音推流,OBS推流,直播助手,零重连">
+    <title>速推流 - 专业抖音直播推流软件</title>
+    
     <style>
         * {
             margin: 0;
@@ -11,261 +14,919 @@
             box-sizing: border-box;
         }
         
+        :root {
+            --primary: #00ffff;
+            --secondary: #ff00ff;
+            --dark: #0a0a0f;
+            --dark-light: #1a1a2e;
+            --text: #ffffff;
+            --text-dim: #a0a0b0;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --neon-glow: 0 0 10px var(--primary), 0 0 20px var(--primary), 0 0 30px var(--primary);
+        }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", sans-serif;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: var(--dark);
+            color: var(--text);
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            overflow-x: hidden;
         }
         
-        .container {
-            max-width: 1200px;
+        /* 动态背景 */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+        }
+        
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
+            animation: bgMove 20s ease-in-out infinite;
+        }
+        
+        @keyframes bgMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(10%, 10%) rotate(180deg); }
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 5%;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        
+        .navbar.scrolled {
+            padding: 0.5rem 5%;
+            background: rgba(10, 10, 15, 0.95);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        header {
-            text-align: center;
-            padding: 60px 20px;
-            color: white;
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: var(--neon-glow);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
-        header h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        .logo-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px var(--primary));
         }
         
-        header p {
-            font-size: 1.5em;
-            opacity: 0.9;
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
         }
         
-        .main-content {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            margin: 40px auto;
-            max-width: 900px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+            padding: 0.5rem 0;
         }
         
-        .features {
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* 移动端菜单按钮 */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+        
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 5% 3rem;
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 1400px;
+            width: 100%;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin: 40px 0;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .hero-text .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+        
+        .hero-text .highlight {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 50px;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+        
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 30px rgba(0, 255, 255, 0.7);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        /* Hero图片 */
+        .hero-visual {
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .hero-visual img {
+            width: 100%;
+            filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.3));
+            border-radius: 20px;
+        }
+        
+        .floating-card {
+            position: absolute;
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 1s ease both;
+        }
+        
+        .floating-card.card-1 {
+            top: 10%;
+            right: -10%;
+            animation-delay: 0.8s;
+        }
+        
+        .floating-card.card-2 {
+            bottom: 10%;
+            left: -10%;
+            animation-delay: 1s;
+        }
+        
+        .floating-card h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .floating-card p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .section-header p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
         }
         
         .feature-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px;
-            border-radius: 15px;
-            color: white;
-            text-align: center;
+            background: rgba(26, 26, 46, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
             transition: transform 0.3s;
         }
         
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+        
         .feature-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 40px rgba(0, 255, 255, 0.2);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px var(--primary));
         }
         
         .feature-card h3 {
-            font-size: 1.5em;
-            margin-bottom: 15px;
+            margin-bottom: 1rem;
+            color: var(--primary);
         }
         
-        .download-section {
-            text-align: center;
-            margin: 50px 0;
-            padding: 40px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border-radius: 15px;
-            color: white;
+        .feature-card p {
+            color: var(--text-dim);
+            line-height: 1.8;
         }
         
-        .download-btn {
-            display: inline-block;
-            background: white;
-            color: #764ba2;
-            padding: 15px 50px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-size: 1.3em;
-            font-weight: bold;
-            margin: 20px 10px;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        /* Pricing Section */
+        .pricing {
+            padding: 5rem 5%;
+            background: rgba(26, 26, 46, 0.3);
         }
         
-        .download-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        .pricing-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
         }
         
-        .version-info {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 30px 0;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 30px;
-            color: white;
-            margin-top: 40px;
-        }
-        
-        .footer a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            opacity: 0.8;
-            transition: opacity 0.3s;
-        }
-        
-        .footer a:hover {
-            opacity: 1;
-        }
-        
-        .nav {
-            background: rgba(255,255,255,0.1);
+        .pricing-card {
+            background: rgba(26, 26, 46, 0.8);
             backdrop-filter: blur(10px);
-            padding: 15px 0;
-            margin-bottom: 20px;
-            border-radius: 10px;
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
         }
         
-        .nav ul {
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--primary);
+        }
+        
+        .pricing-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        
+        .pricing-card h3 {
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+        
+        .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .price span {
+            font-size: 1rem;
+            color: var(--text-dim);
+        }
+        
+        .duration {
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+        
+        .feature-list {
             list-style: none;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .feature-list li {
+            padding: 0.5rem 0;
+            color: var(--text-dim);
             display: flex;
-            justify-content: center;
-            gap: 30px;
+            align-items: center;
+            gap: 0.5rem;
         }
         
-        .nav a {
-            color: white;
+        .feature-list li::before {
+            content: '✓';
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        /* Stats Section */
+        .stats {
+            padding: 5rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 2rem;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+        
+        /* Footer */
+        footer {
+            background: rgba(10, 10, 15, 0.9);
+            padding: 3rem 5%;
+            border-top: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section a {
+            color: var(--text-dim);
             text-decoration: none;
-            font-size: 1.1em;
-            transition: opacity 0.3s;
+            transition: color 0.3s;
         }
         
-        .nav a:hover {
-            opacity: 0.7;
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 255, 255, 0.1);
+            color: var(--text-dim);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(10, 10, 15, 0.98);
+                padding: 2rem;
+                flex-direction: column;
+                gap: 1rem;
+                border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-visual {
+                order: -1;
+            }
+            
+            .floating-card {
+                display: none;
+            }
+            
+            .cta-buttons {
+                justify-content: center;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-text .subtitle {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .price {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <nav class="nav">
-            <ul>
-                <li><a href="index.html">首页</a></li>
-                <li><a href="about.html">关于我们</a></li>
-                <li><a href="contact.html">联系方式</a></li>
-                <li><a href="terms.html">使用条款</a></li>
-                <li><a href="privacy.html">隐私政策</a></li>
+    <!-- 动态背景 -->
+    <div class="bg-animation"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <span>速推流</span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#features">功能</a></li>
+                <li><a href="#pricing">价格</a></li>
+                <li><a href="#about">关于</a></li>
             </ul>
-        </nav>
-        
-        <header>
-            <h1>⚡ 速推流</h1>
-            <p>专业的抖音直播推流软件 - 零重连技术</p>
-        </header>
-        
-        <div class="main-content">
-            <div class="download-section">
-                <h2>🚀 立即下载</h2>
-                <p>最新版本：v2.0 | 支持Windows 10/11</p>
-                <a href="../dist/速推流.exe" download class="download-btn">💾 下载速推流</a>
-                <a href="https://faka.shop/你的店铺" target="_blank" class="download-btn">🔑 购买激活码</a>
-                <p style="margin-top: 20px; color: #666; font-size: 14px;">
-                    💡 购买激活码后，在软件内输入即可激活VIP功能<br>
-                    套餐：体验版9.9元 | 月度29.9元 | 年度198元 | 永久398元
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>⚡ 速推流</h1>
+                <p class="subtitle">专业的抖音直播推流软件</p>
+                <div class="highlight">🎯 零重连技术 · 稳定推流</div>
+                <div class="cta-buttons">
+                    <a href="../dist/速推流.exe" download class="btn btn-primary">
+                        <span>💾</span>
+                        <span>立即下载</span>
+                    </a>
+                    <a href="https://www.fakax.cn//links/A244572F" target="_blank" class="btn btn-secondary">
+                        <span>🔑</span>
+                        <span>购买激活码</span>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div style="background: rgba(26, 26, 46, 0.8); padding: 3rem; border-radius: 20px; border: 1px solid rgba(0, 255, 255, 0.2);">
+                    <div style="font-size: 4rem; text-align: center; margin-bottom: 1rem;">🎮</div>
+                    <h3 style="text-align: center; color: var(--primary); margin-bottom: 1rem;">零重连 · 超稳定</h3>
+                    <p style="text-align: center; color: var(--text-dim);">支持 Windows 10/11</p>
+                </div>
+                <div class="floating-card card-1">
+                    <h4>✅ 实时监控</h4>
+                    <p>智能检测推流状态</p>
+                </div>
+                <div class="floating-card card-2">
+                    <h4>🚀 一键启动</h4>
+                    <p>自动配置OBS设置</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>✨ 核心功能</h2>
+            <p>强大的功能，让直播更轻松</p>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>零重连技术</h3>
+                <p>独家零重连技术，解决直播断流问题，让你的直播间始终在线</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>一键启动</h3>
+                <p>自动检测OBS和直播伴侣，一键启动推流，无需复杂配置</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>智能修复</h3>
+                <p>自动修复常见推流问题，智能优化网络参数，确保推流稳定</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>实时监控</h3>
+                <p>实时显示推流状态、网络延迟、码率等关键信息</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>安全稳定</h3>
+                <p>数据加密传输，保护你的直播信息安全</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌟</div>
+                <h3>持续更新</h3>
+                <p>定期更新功能，持续优化性能，终身免费升级</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <h2>💎 套餐价格</h2>
+            <p>选择适合你的套餐</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>测试卡</h3>
+                <div class="price">7.9<span>元</span></div>
+                <div class="duration">7天体验</div>
+                <ul class="feature-list">
+                    <li>零重连技术</li>
+                    <li>智能修复</li>
+                    <li>实时监控</li>
+                    <li>技术支持</li>
+                </ul>
+                <a href="https://www.fakax.cn//links/A244572F" target="_blank" class="btn btn-secondary">立即购买</a>
+            </div>
+            
+            <div class="pricing-card">
+                <h3>月卡</h3>
+                <div class="price">23.99<span>元</span></div>
+                <div class="duration">30天使用</div>
+                <ul class="feature-list">
+                    <li>所有基础功能</li>
+                    <li>优先技术支持</li>
+                    <li>免费更新</li>
+                    <li>设备绑定</li>
+                </ul>
+                <a href="https://www.fakax.cn//links/A244572F" target="_blank" class="btn btn-secondary">立即购买</a>
+            </div>
+            
+            <div class="pricing-card featured">
+                <div class="pricing-badge">🔥 热门</div>
+                <h3>季卡</h3>
+                <div class="price">69<span>元</span></div>
+                <div class="duration">90天使用</div>
+                <ul class="feature-list">
+                    <li>所有功能</li>
+                    <li>7x24技术支持</li>
+                    <li>优先更新</li>
+                    <li>专属客服</li>
+                </ul>
+                <a href="https://www.fakax.cn//links/A244572F" target="_blank" class="btn btn-primary">立即购买</a>
+            </div>
+            
+            <div class="pricing-card">
+                <h3>年卡</h3>
+                <div class="price">158<span>元</span></div>
+                <div class="duration">365天使用</div>
+                <ul class="feature-list">
+                    <li>所有功能</li>
+                    <li>VIP技术支持</li>
+                    <li>终身更新</li>
+                    <li>最划算</li>
+                </ul>
+                <a href="https://www.fakax.cn//links/A244572F" target="_blank" class="btn btn-secondary">立即购买</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="section-header">
+            <h2>📈 用户信赖</h2>
+            <p>数据说明一切</p>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">10K+</div>
+                <div class="stat-label">活跃用户</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">99.9%</div>
+                <div class="stat-label">稳定性</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">技术支持</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">0</div>
+                <div class="stat-label">重连次数</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer id="about">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>关于速推流</h3>
+                <p style="color: var(--text-dim); line-height: 1.8;">
+                    专业的抖音直播推流软件，采用独家零重连技术，为主播提供稳定可靠的推流服务。
                 </p>
             </div>
-            
-            <h2 style="text-align: center; margin: 40px 0 30px 0;">✨ 核心功能</h2>
-            
-            <div class="features">
-                <div class="feature-card">
-                    <h3>🛡️ 零重连技术</h3>
-                    <p>独家零重连技术，100%稳定推流，告别断流烦恼</p>
-                </div>
-                
-                <div class="feature-card">
-                    <h3>⚡ 一键配置</h3>
-                    <p>自动检测软件路径，自动配置推流参数，一键启动直播</p>
-                </div>
-                
-                <div class="feature-card">
-                    <h3>🎯 智能监控</h3>
-                    <p>实时监控推流状态，自动修复异常，确保直播稳定</p>
-                </div>
-                
-                <div class="feature-card">
-                    <h3>🔧 OBS优化</h3>
-                    <p>深度优化OBS配置，自动设置最佳参数，画质更清晰</p>
-                </div>
-                
-                <div class="feature-card">
-                    <h3>📊 状态监控</h3>
-                    <p>实时显示推流状态、网络延迟、码率等关键信息</p>
-                </div>
-                
-                <div class="feature-card">
-                    <h3>🌟 持续更新</h3>
-                    <p>定期更新功能，持续优化性能，终身免费升级</p>
-                </div>
-            </div>
-            
-            <div class="version-info">
-                <h3>📌 版本信息</h3>
-                <ul style="margin-left: 20px; margin-top: 15px;">
-                    <li><strong>当前版本</strong>：v2.0</li>
-                    <li><strong>更新日期</strong>：2024年1月</li>
-                    <li><strong>系统要求</strong>：Windows 10/11 64位</li>
-                    <li><strong>文件大小</strong>：约 50MB</li>
-                    <li><strong>授权方式</strong>：按年订阅 / 终身授权</li>
+            <div class="footer-section">
+                <h3>快速链接</h3>
+                <ul>
+                    <li><a href="#home">首页</a></li>
+                    <li><a href="#features">功能特性</a></li>
+                    <li><a href="#pricing">价格方案</a></li>
+                    <li><a href="https://www.fakax.cn//links/A244572F" target="_blank">购买激活码</a></li>
                 </ul>
             </div>
-            
-            <div style="margin: 40px 0; padding: 30px; background: #e3f2fd; border-radius: 10px;">
-                <h3 style="color: #1976d2; margin-bottom: 15px;">💡 使用说明</h3>
-                <ol style="margin-left: 20px; line-height: 2;">
-                    <li>下载并安装速推流软件</li>
-                    <li>以管理员身份运行软件</li>
-                    <li>软件自动检测OBS和直播伴侣</li>
-                    <li>在直播伴侣中开播</li>
-                    <li>软件自动配置OBS推流</li>
-                    <li>享受零重连的直播体验</li>
-                </ol>
+            <div class="footer-section">
+                <h3>帮助支持</h3>
+                <ul>
+                    <li><a href="#">使用教程</a></li>
+                    <li><a href="#">常见问题</a></li>
+                    <li><a href="#">联系客服</a></li>
+                    <li><a href="#">技术支持</a></li>
+                </ul>
             </div>
-            
-            <div style="margin: 40px 0; padding: 30px; background: #fff3e0; border-radius: 10px;">
-                <h3 style="color: #f57c00; margin-bottom: 15px;">⚠️ 重要提示</h3>
-                <ul style="margin-left: 20px; line-height: 2;">
-                    <li>本软件仅供个人学习和合法直播使用</li>
-                    <li>请遵守抖音平台的相关规定</li>
-                    <li>不得用于违法违规内容的直播</li>
-                    <li>使用前请仔细阅读用户协议</li>
+            <div class="footer-section">
+                <h3>联系我们</h3>
+                <ul>
+                    <li style="color: var(--text-dim);">官网：zhts.ink</li>
+                    <li style="color: var(--text-dim);">邮箱：support@zhts.ink</li>
+                    <li style="color: var(--text-dim);">QQ群：待开通</li>
                 </ul>
             </div>
         </div>
-        
-        <footer class="footer">
+        <div class="footer-bottom">
             <p>&copy; 2024 速推流 zhts.ink | 专业直播推流软件</p>
-            <div style="margin-top: 15px;">
-                <a href="about.html">关于我们</a>
-                <a href="contact.html">联系方式</a>
-                <a href="terms.html">使用条款</a>
-                <a href="privacy.html">隐私政策</a>
-            </div>
-        </footer>
-    </div>
+            <p style="margin-top: 0.5rem;">
+                <a href="terms.html" style="margin: 0 1rem;">使用条款</a>
+                <a href="privacy.html" style="margin: 0 1rem;">隐私政策</a>
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // 移动端菜单
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+        
+        // 滚动动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.feature-card, .pricing-card, .stat-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
-
-
-
